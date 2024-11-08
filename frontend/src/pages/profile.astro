@@ -1,0 +1,50 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+---
+
+<BaseLayout>
+  <div class="pt-8">
+    <h1>Hello <span id="username">Your Name</span></h1>
+
+    <div id="profile-content" style="display: none;">
+      <p>
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Placeat sequi
+        tempore, eveniet incidunt vitae consequatur, dolor fuga nulla facilis
+        quas aperiam dolorum nesciunt suscipit assumenda voluptatum inventore
+        corporis. Cum, eveniet!
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // ページロード時に認証チェック
+    async function checkAuth() {
+      try {
+        const response = await fetch("http://localhost:3005/api/users/auth", {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          alert("You need to login");
+          window.location.href = "/";
+          return;
+        }
+
+        // when authentication is successful
+        (
+          document.getElementById("profile-content") as HTMLElement
+        ).style.display = "block";
+
+        const data = await response.json();
+        document.getElementById("username")!.textContent = data.username;
+      } catch (error) {
+        console.error("Failed to check authentication:", error);
+        alert("Failed to check authentication");
+        window.location.href = "/";
+      }
+    }
+
+    // execute checkAuth when page loads
+    checkAuth();
+  </script>
+</BaseLayout>
