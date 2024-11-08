@@ -96,8 +96,11 @@ const loginUser = async (req: Request<{}, {}, User>, res: Response) => {
 };
 
 const checkAuth = (req: Request, res: Response) => {
-  // @ts-ignore
-  const { username } = req.user;
+  const { username } = req.user || {};
+  if (!username) {
+    res.status(401).json({ message: "Unauthorized" });
+    return;
+  }
   res.status(200).json({ username });
 };
 

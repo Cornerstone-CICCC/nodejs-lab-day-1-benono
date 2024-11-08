@@ -94,8 +94,11 @@ const loginUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.status(200).json({ message: "Login authenticated" });
 });
 const checkAuth = (req, res) => {
-    // @ts-ignore
-    const { username } = req.user;
+    const { username } = req.user || {};
+    if (!username) {
+        res.status(401).json({ message: "Unauthorized" });
+        return;
+    }
     res.status(200).json({ username });
 };
 exports.default = {
